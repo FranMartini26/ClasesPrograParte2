@@ -3,25 +3,19 @@ import { View, Text, Image, StyleSheet } from "react-native";
 
 class Card extends Component {
   render() {
-    
-    const { title, price, description, category, image } = this.props.product;
+    const { name, species, gender, image } = this.props.character;
 
     return (
       <View style={styles.card}>
         <Image
           source={{ uri: image }}
           style={styles.image}
-          resizeMode="contain"
+          resizeMode="cover"
         />
 
-        <View style={styles.info}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.category}>{category}</Text>
-          <Text style={styles.price}>${price}</Text>
-          <Text style={styles.description} numberOfLines={3}>
-            {description}
-          </Text>
-        </View>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.text}>Especie: {species}</Text>
+        <Text style={styles.text}>Género: {gender}</Text>
       </View>
     );
   }
@@ -30,37 +24,25 @@ class Card extends Component {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 10,
     padding: 12,
     borderWidth: 1,
-    borderColor: "#e6e6e6",
+    borderColor: "#ddd",
   },
   image: {
     width: "100%",
-    height: 180,
+    height: 200,
+    borderRadius: 10,
     marginBottom: 10,
   },
-  info: {
-    gap: 4,
+  name: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 4,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  category: {
-    fontSize: 12,
-    color: "#666",
-  },
-  price: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginTop: 4,
-  },
-  description: {
+  text: {
     fontSize: 14,
-    color: "#333",
-    marginTop: 6,
-    lineHeight: 18,
+    color: "#444",
   },
 });
 

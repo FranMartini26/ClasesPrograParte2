@@ -1,61 +1,50 @@
+// src/screens/ProductsAll.js
 import React, { Component } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import Card from "../Components/Card"; 
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import Card from "../components/Card";
 
 class ProductsAll extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [
-        {
-          id: 1,
-          title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-          price: 109.95,
-          description:
-            "Tu mochila diaria perfecta para llevarlo todo. Hecha en lona resistente.",
-          category: "men's clothing",
-          image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-        },
-        {
-          id: 2,
-          title: "Mens Casual Premium Slim Fit T-Shirts",
-          price: 22.3,
-          description:
-            "Remera de algodón premium con calce slim. Ideal para uso casual.",
-          category: "men's clothing",
-          image:
-            "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
-        },
-        {
-          id: 3,
-          title: "Mens Cotton Jacket",
-          price: 55.99,
-          description:
-            "Campera de algodón resistente y cómoda para el día a día.",
-          category: "men's clothing",
-          image: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg",
-        },
-      ],
+      characters: [], // acá guardamos los personajes
+      loading: true,  // para mostrar indicador de carga
     };
   }
 
-  renderItem = ({ item }) => {
-    return <Card product={item} />;
-  };
+  componentDidMount() {
+    fetch("https://rickandmortyapi.com/api/character")
+      .then((response) => response.json())
+      .then((data) => {
+        // guardamos los resultados en el estado
+        this.setState({
+          characters: data.results,
+          loading: false,
+        });
+      })
+      .catch((error) => console.log("Error en el fetch:", error));
+  }
+
+  renderItem = ({ item }) => <Card character={item} />;
 
   render() {
+    const { characters, loading } = this.state;
+
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Lista de Productos</Text>
+        <Text style={styles.title}>Personajes de Rick & Morty</Text>
 
-        
-        <FlatList
-          data={this.state.products}
-          renderItem={this.renderItem} 
-          keyExtractor={(item) => item.id.toString()} 
-          style={styles.list}
-          contentContainerStyle={styles.listContent}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color="#00b5cc" style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            data={characters}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={this.renderItem}
+            style={styles.list}
+            contentContainerStyle={styles.listContent}
+          />
+        )}
       </View>
     );
   }
@@ -64,7 +53,7 @@ class ProductsAll extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#f5f5f5",
   },
   title: {
     fontSize: 22,
