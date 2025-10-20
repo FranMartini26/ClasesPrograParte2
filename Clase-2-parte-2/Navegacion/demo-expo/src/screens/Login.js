@@ -56,14 +56,6 @@ class Login extends Component {
           <Text style={styles.buttonText}>Entrar en la app</Text>
         </Pressable>
 
-        <Pressable
-          style={[styles.button, { backgroundColor: "#9C27B0" }]}
-          onPress={() =>
-            this.props.navigation.navigate("NavegacionTab", { screen: "Profile" })
-          }
-        >
-          <Text style={styles.buttonText}>Ir a Profile desde Login</Text>
-        </Pressable>
       </View>
     );
   }
