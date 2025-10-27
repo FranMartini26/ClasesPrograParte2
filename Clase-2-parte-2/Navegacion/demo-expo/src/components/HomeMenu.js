@@ -1,32 +1,51 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Home from "../screens/Home";
-import Profile from "../screens/Profile";
-const Tab = createBottomTabNavigator();
-import AntDesign from '@expo/vector-icons/AntDesign';
+import React, { Component } from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
+import { db } from "../firebase/config";
+import Post from "./Post/Post";
 
+class HomeMenu extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      posts: [],
+      loading: true
+    };
+  }
 
-function HomeMenu() {
-  return (
-     <Tab.Navigator>
-        <Tab.Screen name="Home" component={ Home } options={ { tabBarIcon: () => <AntDesign name="home" size={24} color="black" /> }}/>
-        <Tab.Screen name="Profile" component={ Profile } options={ { tabBarIcon: () => <AntDesign name="profile" size={24} color="black" /> }}/>
-     </Tab.Navigator>
-  );
+  componentDidMount() {
+    db.collection("posts")
+      .orderBy("createdAt", "desc")
+      .onSnapshot(docs => {
+        const posts = docs.docs.map(doc => ({
+          id: doc.id,
+          data: doc.data()
+        }));
+        this.setState({ posts: posts, loading: false });
+      });
+  }
+
+  renderItem = ({ item }) => <Post data={item.data} />;
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Home</Text>
+        <FlatList
+          data={this.state.posts}
+          keyExtractor={(item) => item.id}
+          renderItem={this.renderItem}
+          ListEmptyComponent={
+            !this.state.loading ? <Text>No hay posteos</Text> : null
+          }
+        />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  menu: {
-    padding: 20,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 10,
-    margin: 10,
-  },
-  text: {
-    fontSize: 18,
-  },
+  container: { flex: 1, paddingTop: 16 },
+  title: { fontSize: 22, textAlign: "center", marginBottom: 12 }
 });
 
 export default HomeMenu;
