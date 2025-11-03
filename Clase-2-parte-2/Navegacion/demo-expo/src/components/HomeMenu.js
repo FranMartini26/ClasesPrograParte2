@@ -1,30 +1,22 @@
 import React, { Component } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { db } from "../firebase/config";
-import Post from "./Post/Post";
+import Post from "../components/Post";
 
 class HomeMenu extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      posts: [],
-      loading: true
-    };
+    this.state = { posts: [], loading: true };
   }
 
   componentDidMount() {
-    db.collection("posts")
-      .orderBy("createdAt", "desc")
-      .onSnapshot(docs => {
-        const posts = docs.docs.map(doc => ({
-          id: doc.id,
-          data: doc.data()
-        }));
-        this.setState({ posts: posts, loading: false });
-      });
+    db.collection("posts").orderBy("createdAt", "desc").onSnapshot(docs => {
+      const posts = docs.docs.map(doc => ({ id: doc.id, data: doc.data() }));
+      this.setState({ posts: posts, loading: false });
+    });
   }
 
-  renderItem = ({ item }) => <Post data={item.data} />;
+  renderItem = (props) => <Post id={props.item.id} data={props.item.data} />;
 
   render() {
     return (
@@ -34,9 +26,7 @@ class HomeMenu extends Component {
           data={this.state.posts}
           keyExtractor={(item) => item.id}
           renderItem={this.renderItem}
-          ListEmptyComponent={
-            !this.state.loading ? <Text>No hay posteos</Text> : null
-          }
+          ListEmptyComponent={!this.state.loading ? <Text>No hay posteos</Text> : null}
         />
       </View>
     );

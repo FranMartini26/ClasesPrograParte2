@@ -28,7 +28,7 @@ class Register extends Component {
       })
       .then(() => {
         this.setState({ errorMsg: "" });
-        this.props.navigation.navigate("Tabs"); // ✅ redirige al menú principal
+        this.props.navigation.navigate("Tabs"); 
       })
       .catch(error => {
         let msg = "Error al registrar usuario";

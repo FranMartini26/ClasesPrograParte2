@@ -33,7 +33,6 @@ function Tabs() {
         component={Usuarios}
         options={{ tabBarIcon: ({ color, size }) => <AntDesign name="team" size={size} color={color} /> }}
       />
-      <Tab.Screen name="Nuevo post" component={NuevoPost} />
     </Tab.Navigator>
   );
 }
